@@ -34,5 +34,28 @@ AND provinces.provinces > 10;
  Iraq           | IRQ  | Baghdad          |            5750000 | IRQ     |        18
  United Kingdom | GB   | London           |            8250205 | GB      |        12
 
-Task 2
+Task 3
+
+WITH country_mountains AS (
+  SELECT geo_mountain.country, count(geo_mountain.country) AS mountains
+  FROM mountain
+  FULL JOIN geo_mountain ON mountain.name = geo_mountain.mountain
+  GROUP BY country
+  ORDER BY mountains DESC
+), many_mountains AS (
+  SELECT * FROM country_mountains 
+  WHERE mountains > (SELECT AVG(mountains) FROM country_mountains)
+), top AS (
+  SELECT count(country) AS count_countries, mountains AS count_mountains 
+  FROM many_mountains 
+  GROUP BY mountains 
+  ORDER BY count_countries DESC, mountains DESC
+) SELECT * FROM top WHERE count_countries = (SELECT MAX(count_countries) FROM top);
+
+ count_countries | count_mountains 
+-----------------+-----------------
+               5 |               8
+               5 |               5
+
+
 
