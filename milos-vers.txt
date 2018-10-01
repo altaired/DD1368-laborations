@@ -37,7 +37,7 @@ AND provinces.provinces > 10;
  
 TASK 2:
 
-ONLY GIVES US THE CITYS WITH ALL OF THEM!
+
 
 WITH sea AS(
   SELECT city.name AS city, geo_sea.sea,
@@ -66,8 +66,25 @@ river AS(
   ORDER BY city
 )
 
+ONLY GIVES US THE CITYS WITH ALL OF THEM!
+
 SELECT sea.city, sea.province, sea.population, sea.sea, lake.lake, river.river
 FROM sea
 JOIN lake ON sea.city = lake.city
 JOIN river ON sea.city = river.city
-WHERE sea.population > 3000000;
+WHERE sea.population > 3000000
+
+
+ACTS WEID!
+
+SELECT *
+FROM sea
+WHERE sea.population > 3000000
+UNION
+SELECT *
+FROM lake
+WHERE lake.population > 3000000
+UNION
+SELECT *
+FROM river
+WHERE river.population > 3000000
