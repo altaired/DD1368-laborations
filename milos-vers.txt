@@ -11,7 +11,7 @@ WITH capitals AS (
 SELECT *                    
 FROM capitals INNER JOIN provinces 
 ON capitals.code = provinces.country 
-AND provinces.provinces > 10
+AND provinces.provinces > 10;
 
 
     country     |      capital      | population | code | country | provinces 
