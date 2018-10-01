@@ -37,3 +37,37 @@ AND provinces.provinces > 10;
  
 TASK 2:
 
+ONLY GIVES US THE CITYS WITH ALL OF THEM!
+
+WITH sea AS(
+  SELECT city.name AS city, geo_sea.sea,
+  city.province AS province,
+  city.population AS population
+  FROM city, geo_sea
+  WHERE city.province = geo_sea.province
+  ORDER BY city
+),
+
+lake AS(
+  SELECT city.name AS city, geo_lake.lake,
+  city.province AS province,
+  city.population
+  FROM city, geo_lake
+  WHERE city.province = geo_lake.province
+  ORDER BY city
+),
+
+river AS(
+  SELECT city.name AS city, geo_river.river,
+  city.province AS province,
+  city.population
+  FROM city, geo_river
+  WHERE city.province = geo_river.province
+  ORDER BY city
+)
+
+SELECT sea.city, sea.province, sea.population, sea.sea, lake.lake, river.river
+FROM sea
+JOIN lake ON sea.city = lake.city
+JOIN river ON sea.city = river.city
+WHERE sea.population > 3000000;
