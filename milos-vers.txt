@@ -1,3 +1,6 @@
+TASK 1:
+
+
 WITH capitals AS (                                                     
   SELECT country.name AS country, city.name AS capital, city.population, country.code
   FROM country, city                                             
@@ -29,3 +32,8 @@ AND provinces.provinces > 10;
  Angola         | Luanda            |    6760439 | ANG  | ANG     |        18
  Iraq           | Baghdad           |    5750000 | IRQ  | IRQ     |        18
  United Kingdom | London            |    8250205 | GB   | GB      |        12
+ 
+ ----------------------------------------------
+ 
+TASK 2:
+
