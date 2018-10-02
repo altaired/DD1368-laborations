@@ -71,7 +71,10 @@ WITH sea AS(
   WHERE city.population > 3000000
 )
 
-SELECT cities.city, sea.sea, lake.lake, river.river
+SELECT cities.city, cities.province 
+sea.sea, sea.province, 
+lake.lake, lake.province, 
+river.river, river.province
 FROM cities, sea, lake, river
 WHERE cities.province <> sea.province
 OR cities.province <> lake.province
