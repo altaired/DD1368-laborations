@@ -88,3 +88,41 @@ UNION
 SELECT *
 FROM river
 WHERE river.population > 3000000
+
+
+---------
+WITH sea AS(
+  SELECT geo_sea.sea, geo_sea.province
+  FROM geo_sea
+), lake AS(
+  SELECT geo_lake.lake, geo_lake.province
+  FROM geo_lake
+), river AS(
+  SELECT geo_river.river, geo_river.province
+  FROM geo_river
+), cities AS(
+  SELECT city.name AS city, city.province, city.population
+  FROM city
+  WHERE city.population > 3000000
+)
+
+SELECT cities.city, sea.sea, lake.lake, river.river
+FROM cities, sea, lake, river
+WHERE cities.province <> sea.province
+OR cities.province <> lake.province
+OR cities.province <> river.province
+
+------------
+
+SELECT *
+FROM cities
+WHERE cities NOT IN(
+  SELECT *
+  FROM sea
+  UNION
+  SELECT *
+  FROM lake
+  UNION
+  SELECT *
+  FROM river
+)
