@@ -34,6 +34,24 @@ AND provinces.provinces > 10;
  Iraq           | IRQ  | Baghdad          |            5750000 | IRQ     |        18
  United Kingdom | GB   | London           |            8250205 | GB      |        12
 
+Task 2
+
+WITH landlocked AS(
+  SELECT *
+  FROM located LEFT JOIN city
+  ON located.city = city.name AND city.population > 3000000
+  WHERE river IS NULL AND lake IS NULL AND sea IS NULL
+)
+
+  SELECT (SELECT count(*) AS landlocked FROM landlocked), count(*) AS all
+  FROM city
+  WHERE city.population > 3000000;
+  
+   landlocked | all 
+------------+-----
+         18 | 102
+
+
 Task 3
 
 WITH country_mountains AS (
