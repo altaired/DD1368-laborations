@@ -94,3 +94,45 @@ WHERE cities NOT IN(
   SELECT *
   FROM river
 )
+
+------
+ WITH sea AS(
+  SELECT geo_sea.sea, geo_sea.province
+  FROM geo_sea
+), lake AS(
+  SELECT geo_lake.lake, geo_lake.province
+  FROM geo_lake
+), river AS(
+  SELECT geo_river.river, geo_river.province
+  FROM geo_river
+), cities AS(
+  SELECT city.name AS city, city.province, city.population
+  FROM city
+  WHERE city.population > 3000000
+)
+SELECT *
+FROM cities
+WHERE cities.province NOT IN(
+  SELECT province
+  FROM sea
+  UNION ALL
+  SELECT province
+  FROM lake
+  UNION ALL
+  SELECT province
+  FROM river
+);
+    city     |     province      | population
+-------------+-------------------+------------
+ Madrid      | Madrid            |    3198645
+ Moskva      | Moscow            |   11979529
+ Ankara      | Ankara            |    4630735
+ Taiyuan     | Shanxi            |    3426519
+ Beijing     | Beijing           |   11716620
+ Tianjin     | Tianjin           |   11090314
+ Mashhad     | Khorasan-e-Razavi |    3001184
+ Tehran      | Tehran            |    8693706
+ Riyadh      | Al-Riyadh         |    4087152
+ Kano        | Kano              |    4155000
+ Ibadan      | Oyo               |    3160000
+ Addis Ababa | Addis Ababa       |    3040740
