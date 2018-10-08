@@ -267,11 +267,24 @@ ORDER by GDP DESC
 
 Task 8
 
-WITH all_borders AS (
+WITH RECURSIVE all_borders AS (
     SELECT country1 AS c1, country2 AS c2 FROM borders
     UNION ALL
     SELECT country2 AS c1, country1 AS c2 FROM borders
-) 
-SELECT c1, c2 FROM all_borders
-ORDER BY c1;
+), res as (
+    SELECT c1, c2, 0 AS n
+    FROM all_borders
+    WHERE c1 = 'S'
+    UNION ALL
+    SELECT child.c1, child.c2, n + 1
+    FROM all_borders AS CHILD
+    JOIN res AS PARENT ON PARENT.c1 = CHILD.c2 AND n < 5
+)
+SELECT c1 AS code, country.name, MIN(n) AS steps
+FROM res
+LEFT JOIN country
+ON country.code = c1
+GROUP BY c1, country.name
+ORDER BY steps;
+
 
