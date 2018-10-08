@@ -267,4 +267,11 @@ ORDER by GDP DESC
 
 Task 8
 
+WITH all_borders AS (
+    SELECT country1 AS c1, country2 AS c2 FROM borders
+    UNION ALL
+    SELECT country2 AS c1, country1 AS c2 FROM borders
+) 
+SELECT c1, c2 FROM all_borders
+ORDER BY c1;
 
