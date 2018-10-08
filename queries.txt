@@ -267,6 +267,8 @@ ORDER by GDP DESC
 
 Task 8
 
+https://www.sql-workbench.eu/comparison/recursive_queries.html
+
 WITH RECURSIVE all_borders AS (
     SELECT country1 AS c1, country2 AS c2 FROM borders
     UNION ALL
