@@ -1,10 +1,16 @@
 WITH mountains AS(
-  SELECT country.name AS name, mountain.name AS mountain, encompasses.continent AS continent,
-  mountain.elevation AS height,
-  sqrt(POWER((mountain.coordinates).latitude, 2)
-  + POWER((mountain.coordinates).longitude, 2)) AS distance
+  SELECT country.name AS name, 
+    mountain.name AS mountain, 
+    encompasses.continent AS continent,
+    mountain.elevation AS height,
+    
+    --the mountains distance from 0.0 using the Pythagorian theorem
+    
+    sqrt(POWER((mountain.coordinates).latitude, 2)
+      + POWER((mountain.coordinates).longitude, 2)) AS distance
+      
   FROM mountain LEFT JOIN geo_mountain
-  ON mountain.name = geo_mountain.mountain 
+    ON mountain.name = geo_mountain.mountain 
   LEFT JOIN encompasses
   ON encompasses.country = geo_mountain.country
   LEFT JOIN country
@@ -22,4 +28,4 @@ WHERE distance = (SELECT min(distance) FROM mountains WHERE mountains.continent 
  Spain                 | Pico de las Nieves | Europe            |   1949 | 30.2780861350251132
  Egypt                 | Shaiyb al-Banat    | Asia              |   2187 | 43.0058193736615138
  Sao Tome and Principe | Pico de Sao Tome   | Africa            |   2024 |  6.6030296076876711
-Brazil | Pico da Bandeira | America | 2892 | 46.5299215559192620
+ Brazil                | Pico da Bandeira   | America           |   2892 | 46.5299215559192620
