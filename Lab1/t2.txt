@@ -11,7 +11,7 @@ WITH landlocked AS(
     sea IS NULL
 )
 
-  --
+  --count landlocked and all countries
 
   SELECT (SELECT count(*) AS landlocked 
       FROM landlocked), 
