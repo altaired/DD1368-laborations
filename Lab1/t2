@@ -1,0 +1,14 @@
+WITH landlocked AS(
+  SELECT *
+  FROM located LEFT JOIN city
+  ON located.city = city.name AND city.population > 3000000
+  WHERE river IS NULL AND lake IS NULL AND sea IS NULL
+)
+
+  SELECT (SELECT count(*) AS landlocked FROM landlocked), count(*) AS all
+  FROM city
+  WHERE city.population > 3000000;
+  
+   landlocked | all 
+------------+-----
+         18 | 102
