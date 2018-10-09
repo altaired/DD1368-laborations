@@ -1,0 +1,37 @@
+
+WITH tr AS(
+  SELECT SUM(population) AS population
+  FROM city
+  WHERE latitude > 0 AND longitude > 0
+), tl AS(
+  SELECT  SUM(population) AS population
+  FROM city
+  WHERE latitude < 0 AND longitude > 0
+), br AS(
+  SELECT  SUM(population) AS population
+  FROM city
+  WHERE latitude > 0 AND longitude < 0
+), bl AS(
+  SELECT  SUM(population) AS population
+  FROM city
+  WHERE latitude < 0 AND longitude < 0
+), total AS(
+  SELECT *
+  FROM tr
+  UNION ALL
+  SELECT * 
+  FROM tl
+  UNION ALL 
+  SELECT *
+  FROM br
+  UNION ALL 
+  SELECT *
+  FROM bl
+)
+
+SELECT MIN(population) AS dividend, MAX(population) AS divisor, MIN(population)/MAX(population) AS ratio
+FROM total
+
+ dividend  |  divisor   |         ratio          
+-----------+------------+------------------------
+142291579 | 1186720665 | 0.11990317788896007807
