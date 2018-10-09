@@ -1,0 +1,81 @@
+https://www.sql-workbench.eu/comparison/recursive_queries.html
+
+WITH RECURSIVE all_borders AS (
+    SELECT country1 AS c1, country2 AS c2 FROM borders
+    UNION ALL
+    SELECT country2 AS c1, country1 AS c2 FROM borders
+), res as (
+    SELECT c1, c2, 0 AS n
+    FROM all_borders
+    WHERE c1 = 'S'
+    UNION ALL
+    SELECT child.c1, child.c2, n + 1
+    FROM all_borders AS CHILD
+    JOIN res AS PARENT ON PARENT.c1 = CHILD.c2 AND n < 5
+)
+SELECT c1 AS code, country.name, MIN(n) AS steps
+FROM res
+LEFT JOIN country
+ON country.code = c1
+GROUP BY c1, country.name
+ORDER BY steps;
+
+ code |      name      | steps 
+------+----------------+-------
+ S    | Sweden         |     0
+ N    | Norway         |     1
+ SF   | Finland        |     1
+ R    | Russia         |     2
+ AZ   | Azerbaijan     |     3
+ UA   | Ukraine        |     3
+ PL   | Poland         |     3
+ EW   | Estonia        |     3
+ CN   | China          |     3
+ LV   | Latvia         |     3
+ BY   | Belarus        |     3
+ MNG  | Mongolia       |     3
+ NOK  | North Korea    |     3
+ LT   | Lithuania      |     3
+ GE   | Georgia        |     3
+ KAZ  | Kazakhstan     |     3
+ SK   | Slovakia       |     4
+ IND  | India          |     4
+ IR   | Iran           |     4
+ TAD  | Tajikistan     |     4
+ VN   | Vietnam        |     4
+ MYA  | Myanmar        |     4
+ LAO  | Laos           |     4
+ CZ   | Czech Republic |     4
+ AFG  | Afghanistan    |     4
+ UZB  | Uzbekistan     |     4
+ ARM  | Armenia        |     4
+ D    | Germany        |     4
+ ROK  | South Korea    |     4
+ MACX | Macao          |     4
+ RO   | Romania        |     4
+ TR   | Turkey         |     4
+ PK   | Pakistan       |     4
+ MD   | Moldova        |     4
+ HONX | Hong Kong      |     4
+ BHT  | Bhutan         |     4
+ NEP  | Nepal          |     4
+ KGZ  | Kyrgyzstan     |     4
+ H    | Hungary        |     4
+ TM   | Turkmenistan   |     4
+ IRQ  | Iraq           |     5
+ BD   | Bangladesh     |     5
+ DK   | Denmark        |     5
+ SYR  | Syria          |     5
+ L    | Luxembourg     |     5
+ BG   | Bulgaria       |     5
+ GR   | Greece         |     5
+ F    | France         |     5
+ A    | Austria        |     5
+ HR   | Croatia        |     5
+ NL   | Netherlands    |     5
+ K    | Cambodia       |     5
+ CH   | Switzerland    |     5
+ SRB  | Serbia         |     5
+ SLO  | Slovenia       |     5
+ THA  | Thailand       |     5
+ B    | Belgium        |     5
