@@ -1,0 +1,33 @@
+WITH country_capital AS (
+  SELECT country.name AS country, country.code, city.name AS capital, city.population AS capital_population 
+  FROM country 
+  LEFT JOIN city ON city.country = country.code AND city.name = country.capital
+  ORDER BY country
+), country_capital_limited AS (
+  SELECT * FROM country_capital WHERE capital_population > 5000000
+), provinces AS (
+  SELECT country, count(country) AS provinces 
+  FROM province GROUP BY country 
+  ORDER BY provinces DESC
+) 
+
+SELECT * FROM country_capital_limited 
+INNER JOIN provinces 
+ON country_capital_limited.code = provinces.country 
+AND provinces.provinces > 10;
+
+    country     | code |     capital      | capital_population | country | provinces 
+----------------+------+------------------+--------------------+---------+-----------
+ Russia         | R    | Moskva           |           11979529 | R       |        82
+ Japan          | J    | Tokyo            |            8591695 | J       |        47
+ India          | IND  | Delhi            |           11034555 | IND     |        36
+ Colombia       | CO   | Bogotá           |            7776845 | CO      |        33
+ Indonesia      | RI   | Jakarta          |            9607787 | RI      |        33
+ Mexico         | MEX  | Ciudad de México |            8555272 | MEX     |        32
+ China          | CN   | Beijing          |           11716620 | CN      |        31
+ Iran           | IR   | Tehran           |            8693706 | IR      |        31
+ Zaire          | ZRE  | Kinshasa         |           11575000 | ZRE     |        26
+ Peru           | PE   | Lima             |            7605742 | PE      |        26
+ Angola         | ANG  | Luanda           |            6760439 | ANG     |        18
+ Iraq           | IRQ  | Baghdad          |            5750000 | IRQ     |        18
+United Kingdom | GB | London | 8250205 | GB | 12
