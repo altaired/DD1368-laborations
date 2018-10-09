@@ -1,0 +1,38 @@
+WITH c1 AS (
+  SELECT country1 AS country, COUNT(country1) AS count FROM borders GROUP BY country1
+), c2 AS (
+  SELECT country2 AS country, COUNT(country2) AS count FROM borders GROUP BY country2
+), total AS (
+  SELECT COALESCE(c1.country, c2.country) AS CC, COALESCE(c1.count, 0) + COALESCE(c2.count, 0) as total
+  FROM c1
+  FULL JOIN c2 ON c1.country = c2.country
+) SELECT country.name, total.total 
+FROM total LEFT JOIN country ON country.code = total.CC 
+WHERE total.total = (SELECT min(total) FROM total);
+
+        name        | total 
+--------------------+-------
+ Denmark            |     1
+ Monaco             |     1
+ Gibraltar          |     1
+ Holy See           |     1
+ Ceuta              |     1
+ Melilla            |     1
+ Ireland            |     1
+ San Marino         |     1
+ Portugal           |     1
+ United Kingdom     |     1
+ Brunei             |     1
+ Hong Kong          |     1
+ Macao              |     1
+ Timor-Leste        |     1
+ Papua New Guinea   |     1
+ South Korea        |     1
+ Qatar              |     1
+ Canada             |     1
+ Dominican Republic |     1
+ Haiti              |     1
+ Sint Maarten       |     1
+ Saint Martin       |     1
+ Gambia             |     1
+Lesotho | 1
