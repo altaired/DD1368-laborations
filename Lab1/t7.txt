@@ -1,76 +1,36 @@
 WITH combined AS(
-  SELECT economy.country, encompasses.continent AS continent, COALESCE(economy.GDP, 0) AS GDP
+  SELECT economy.country AS country, encompasses.continent AS continent, COALESCE(economy.GDP, 0) AS GDP
   FROM economy LEFT JOIN encompasses ON economy.country = encompasses.country
   ORDER BY encompasses.continent, GDP DESC
-), europe AS(
-  SELECT *
-  FROM combined
-  WHERE continent LIKE 'Europe'
-  LIMIT (SELECT (count(*) * 0.2) AS top20EU
-    FROM combined
-    WHERE combined.continent LIKE 'Europe')
-), africa AS(
-  SELECT *
-  FROM combined
-  WHERE continent LIKE 'Africa'
-  LIMIT (SELECT (count(*) * 0.2) AS top20EU
-    FROM combined
-    WHERE combined.continent LIKE 'Africa'
-  )
-), asia AS(
-  SELECT *
-  FROM combined
-  WHERE continent LIKE 'Asia'
-  LIMIT (SELECT (count(*) * 0.2) AS top20EU
-    FROM combined
-    WHERE combined.continent LIKE 'Asia'
-  )
-), america AS(
-  SELECT *
-  FROM combined
-  WHERE continent LIKE 'America'
-  LIMIT (SELECT (count(*) * 0.2) AS top20EU
-    FROM combined
-    WHERE combined.continent LIKE 'America'
-  )
-), oceania AS(
-  SELECT *
-  FROM combined
-  WHERE continent LIKE '%Oceania'
-  LIMIT (SELECT (count(*) * 0.2) AS top20EU
-    FROM combined
-    WHERE combined.continent LIKE '%Oceania'
-  )
-), total AS(
-  SELECT *
-  FROM europe
-  WHERE GDP = (SELECT MIN(GDP) FROM europe)
-  UNION ALL
-  SELECT * 
-  FROM africa
-  WHERE GDP = (SELECT MIN(GDP) FROM africa)
-  UNION ALL
-  SELECT * 
-  FROM asia
-  WHERE GDP = (SELECT MIN(GDP) FROM asia)
-  UNION ALL
-  SELECT * 
-  FROM america
-  WHERE GDP = (SELECT MIN(GDP) FROM america)
-  UNION ALL
-  SELECT * 
-  FROM oceania
-  WHERE GDP = (SELECT MIN(GDP) FROM oceania)
+), top20s AS (
+    SELECT continent, country, GDP
+    FROM (
+      SELECT 
+        continent, 
+        country,
+        GDP,
+        COUNT(*) OVER (PARTITION BY continent) AS total,
+        row_number() OVER 
+        (PARTITION BY continent ORDER BY GDP DESC) AS rownumber
+        FROM combined
+    ) t
+    where rownumber <= 0.20 * total
+), grouped AS (
+    SELECT continent, MIN(GDP) AS GDP
+    FROM top20s
+    GROUP BY continent
 )
-    
-SELECT *
-FROM total
-ORDER by GDP DESC
 
- country |     continent     |  gdp   
----------+-------------------+--------
- N       | Europe            | 515800
- THA     | Asia              | 400900
- EC      | America           |  91410
- EAK     | Africa            |  45310
- FPOL    | Australia/Oceania |   5650
+SELECT grouped.continent, combined.country, combined.gdp FROM grouped
+LEFT JOIN combined 
+ON grouped.continent = combined.continent 
+AND grouped.GDP = combined.GDP
+ORDER BY combined.GDP DESC;
+
+     continent     | country |  gdp
+-------------------+---------+--------
+ Europe            | S       | 552000
+ Asia              | IR      | 411900
+ America           | PR      |  93520
+ Africa            | EAK     |  45310
+ Australia/Oceania | NCA     |   9280
