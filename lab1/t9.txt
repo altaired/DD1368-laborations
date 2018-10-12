@@ -54,11 +54,11 @@ WITH RECURSIVE donau as (
     JOIN mississippi AS PARENT ON PARENT.name = CHILD.river
 ), all_rivers AS (
     SELECT * FROM donau
-    UNION ALL SELECT * FROM nile
-    UNION ALL SELECT * FROM jangtse
-    UNION ALL SELECT * FROM rhein
-    UNION ALL SELECT * FROM amazon
-    UNION ALL SELECT * FROM mississippi
+    UNION ALL SELECT MAX(n), pt, len FROM nile
+    UNION ALL SELECT MAX(n), pt, len FROM jangtse
+    UNION ALL SELECT MAX(n), pt, len FROM rhein
+    UNION ALL SELECT MAX(n), pt, len FROM amazon
+    UNION ALL SELECT MAX(n), pt, len FROM mississippi
 )
 
 SELECT RANK() OVER(ORDER BY n) AS rank, pt AS path, n AS numrivers, len AS totlength FROM all_rivers
