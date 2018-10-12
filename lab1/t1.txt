@@ -1,4 +1,3 @@
-
 WITH country_capital AS (
   
   --merge country and city
@@ -17,29 +16,31 @@ country_capital_limited AS (
   SELECT country, count(country) AS provinces 
   FROM province GROUP BY country 
   ORDER BY provinces DESC
-) 
+), 
 
---merge with province, add province restriction
+shown_countries AS (
+    SELECT provinces.country AS ccc, country_capital_limited.country, capital, capital_population, provinces 
+    FROM country_capital_limited 
+    INNER JOIN provinces 
+    ON country_capital_limited.code = provinces.country 
+    AND provinces.provinces > 10
+), 
 
-SELECT * 
-FROM country_capital_limited 
-INNER JOIN provinces 
-ON country_capital_limited.code = provinces.country 
-AND provinces.provinces > 10;
+with_continent AS (
+    SELECT * FROM shown_countries
+    LEFT JOIN encompasses ON encompasses.country = ccc
+)
+
+SELECT continent, COUNT(ccc) FROM with_continent
+GROUP BY continent
+ORDER BY count DESC
 
 
-    country     | code |     capital      | capital_population | country | provinces 
-----------------+------+------------------+--------------------+---------+-----------
- Russia         | R    | Moskva           |           11979529 | R       |        82
- Japan          | J    | Tokyo            |            8591695 | J       |        47
- India          | IND  | Delhi            |           11034555 | IND     |        36
- Colombia       | CO   | Bogotá           |            7776845 | CO      |        33
- Indonesia      | RI   | Jakarta          |            9607787 | RI      |        33
- Mexico         | MEX  | Ciudad de México |            8555272 | MEX     |        32
- China          | CN   | Beijing          |           11716620 | CN      |        31
- Iran           | IR   | Tehran           |            8693706 | IR      |        31
- Zaire          | ZRE  | Kinshasa         |           11575000 | ZRE     |        26
- Peru           | PE   | Lima             |            7605742 | PE      |        26
- Angola         | ANG  | Luanda           |            6760439 | ANG     |        18
- Iraq           | IRQ  | Baghdad          |            5750000 | IRQ     |        18
-United Kingdom | GB | London | 8250205 | GB | 12
+
+     continent     | count
+-------------------+-------
+ Asia              |     7
+ America           |     3
+ Africa            |     2
+ Europe            |     2
+ Australia/Oceania |     1
