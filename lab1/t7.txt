@@ -9,6 +9,8 @@ WITH combined AS(
         continent, 
         country,
         GDP,
+        
+       -- split by continent, then number, then select the to 20% of them
         COUNT(*) OVER (PARTITION BY continent) AS total,
         row_number() OVER 
         (PARTITION BY continent ORDER BY GDP DESC) AS rownumber
@@ -16,6 +18,7 @@ WITH combined AS(
     ) t
     where rownumber <= 0.20 * total
 ), grouped AS (
+--lowest GDP of top 20%
     SELECT continent, MIN(GDP) AS GDP
     FROM top20s
     GROUP BY continent
