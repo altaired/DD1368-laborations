@@ -1,6 +1,6 @@
 WITH RECURSIVE all_borders AS (
 
---Make a table that combines boarders from both directions
+--Make a table that combines boarders from both directions, now have each country on both sides
 
     SELECT country1 AS fr, country2 AS towards FROM borders
     UNION ALL
@@ -21,7 +21,7 @@ res as (
     SELECT child.fr, child.towards, n + 1
     FROM all_borders AS CHILD
     
---base case for the recursion
+--base case for the recursion, check for country in parent from that is the same as child in to, give childs from. max 5 steps
     
     JOIN res AS PARENT ON PARENT.fr = CHILD.towards AND n < 5
 )
