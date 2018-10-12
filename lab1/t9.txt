@@ -53,80 +53,33 @@ WITH RECURSIVE donau as (
     FROM river AS CHILD
     JOIN mississippi AS PARENT ON PARENT.name = CHILD.river
 ), all_rivers AS (
-    SELECT * FROM donau
-    UNION ALL SELECT MAX(n), pt, len FROM nile
-    UNION ALL SELECT MAX(n), pt, len FROM jangtse
-    UNION ALL SELECT MAX(n), pt, len FROM rhein
-    UNION ALL SELECT MAX(n), pt, len FROM amazon
-    UNION ALL SELECT MAX(n), pt, len FROM mississippi
+    SELECT * FROM donau WHERE n = (SELECT MAX(n) FROM donau)
+    UNION ALL SELECT * FROM nile WHERE n = (SELECT MAX(n) FROM nile)
+    UNION ALL SELECT * FROM jangtse WHERE n = (SELECT MAX(n) FROM jangtse)
+    UNION ALL SELECT * FROM rhein WHERE n = (SELECT MAX(n) FROM rhein)
+    UNION ALL SELECT * FROM amazon WHERE n = (SELECT MAX(n) FROM amazon)
+    UNION ALL SELECT * FROM mississippi WHERE n = (SELECT MAX(n) FROM mississippi)
 )
 
 SELECT RANK() OVER(ORDER BY n) AS rank, pt AS path, n AS numrivers, len AS totlength FROM all_rivers
 WHERE name NOT IN (SELECT river FROM river WHERE river != '')
 ORDER BY numrivers;
 
- rank |                            path                            | numrivers | totlength 
+
+ rank |                            path                            | numrivers | totlength
 ------+------------------------------------------------------------+-----------+-----------
-    1 | Donau - Breg                                               |         2 |    2890.9
-    1 | Donau - Brigach                                            |         2 |      2888
-    1 | Donau - Iller                                              |         2 |      2992
-    1 | Donau - Lech                                               |         2 |      3109
-    1 | Donau - Ilz                                                |         2 |      2907
-    1 | Donau - Regen                                              |         2 |      2970
-    1 | Donau - Enns                                               |         2 |      3099
-    1 | Donau - March                                              |         2 |      3203
-    1 | Donau - Raab                                               |         2 |      3095
-    1 | Donau - Waag                                               |         2 |      3248
-    1 | Donau - Iskar                                              |         2 |      3213
-    1 | Donau - Olt                                                |         2 |      3460
-    1 | Donau - Sereth                                             |         2 |      3571
-    1 | Donau - Pruth                                              |         2 |      3798
-    1 | Nile - Atbara                                              |         2 |      4210
-    1 | Nile - Blue Nile                                           |         2 |      4873
     1 | Yangtze - Han                                              |         2 |      7912
     1 | Yangtze - Gan Jiang                                        |         2 |      7138
-    1 | Rhein - Lippe                                              |         2 |      1544
-    1 | Rhein - Ruhr                                               |         2 |      1543
-    1 | Rhein - Sieg                                               |         2 |      1479
-    1 | Rhein - Lahn                                               |         2 |      1570
-    1 | Rhein - Main                                               |         2 |      1848
-    1 | Rhein - Ill                                                |         2 |      1541
-    1 | Rhein - Elz                                                |         2 |      1445
-    1 | Rhein - Hinterrhein                                        |         2 |      1396
-    1 | Rhein - Maas                                               |         2 |      2249
-    1 | Amazonas - Rio Negro                                       |         2 |      6644
-    1 | Amazonas - Japura                                          |         2 |      6594
-    1 | Amazonas - Rio Putumayo                                    |         2 |      5591
-    1 | Amazonas - Jurua                                           |         2 |      7061
-    1 | Amazonas - Xingu                                           |         2 |      5758
-    1 | Mississippi - Arkansas                                     |         2 |      6112
-   34 | Amazonas - Ucayali - Urubamba                              |         3 |      6128
-   34 | Amazonas - Rio Madeira - Rio Mamore                        |         3 |      7159
-   34 | Rhein - Aare - Reuss                                       |         3 |      1776
-   34 | Rhein - Aare - Limmat                                      |         3 |    1648.3
-   34 | Donau - Inn - Alz                                          |         3 |      3512
-   34 | Donau - Inn - Salzach                                      |         3 |      3587
-   34 | Donau - Drau - Mur                                         |         3 |      4047
-   34 | Donau - Theiss - MureÈ™                                    |         3 |      4929
-   34 | Donau - ArgeÈ™ - DÃ¢mboviÈ›a                               |         3 |      3432
-   34 | Donau - Morava - Western Morava                            |         3 |      3338
-   34 | Donau - Morava - Southern Morava                           |         3 |      3325
-   34 | Mississippi - Ohio River - Allegheny River                 |         3 |      5880
-   34 | Mississippi - Ohio River - Tennessee River                 |         3 |      6406
-   34 | Amazonas - Maranon - Huallaga                              |         3 |      6821
-   34 | Amazonas - Purus - Acre                                    |         3 |      7988
-   34 | Rhein - Mosel - Saar                                       |         3 |      2095
-   34 | Rhein - Neckar - Enz                                       |         3 |      1796
-   51 | Amazonas - Ucayali - Tambo - Perene                        |         4 |      5703
-   51 | Amazonas - Ucayali - Tambo - Ene                           |         4 |      5718
-   51 | Amazonas - Ucayali - Tambo - Mantaro                       |         4 |      6262
-   51 | Amazonas - Ucayali - Tambo - Apurimac                      |         4 |      6268
-   51 | Nile - White Nile - Sobat - Pibor                          |         4 |      5100
-   51 | Nile - White Nile - Sobat - Baro                           |         4 |      5086
-   51 | Mississippi - Missouri - Platte River - North Platte River |         4 |      9501
-   51 | Donau - Isar - Ammer - WÃ¼rm                               |         4 |      3343
-   51 | Rhein - Mosel - Sauer - Alzette                            |         4 |      2114
-   51 | Donau - Save - Drina - Tara                                |         4 |      4276
-   51 | Donau - Save - Drina - Piva                                |         4 |      4256
-   51 | Amazonas - Rio Madeira - Beni - Rio Madre de Dios          |         4 |      8038
-   51 | Mississippi - Missouri - Platte River - South Platte River |         4 |      9118
+    3 | Donau - Save - Drina - Piva                                |         4 |      4256
+    3 | Nile - White Nile - Sobat - Pibor                          |         4 |      5100
+    3 | Nile - White Nile - Sobat - Baro                           |         4 |      5086
+    3 | Rhein - Mosel - Sauer - Alzette                            |         4 |      2114
+    3 | Amazonas - Ucayali - Tambo - Perene                        |         4 |      5703
+    3 | Amazonas - Ucayali - Tambo - Ene                           |         4 |      5718
+    3 | Amazonas - Ucayali - Tambo - Mantaro                       |         4 |      6262
+    3 | Amazonas - Ucayali - Tambo - Apurimac                      |         4 |      6268
+    3 | Amazonas - Rio Madeira - Beni - Rio Madre de Dios          |         4 |      8038
+    3 | Mississippi - Missouri - Platte River - North Platte River |         4 |      9501
+    3 | Donau - Isar - Ammer - Würm                                |         4 |      3343
+    3 | Mississippi - Missouri - Platte River - South Platte River |         4 |      9118
+    3 | Donau - Save - Drina - Tara                                |         4 |      4276
