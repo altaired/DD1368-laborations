@@ -1,0 +1,13 @@
+\set user 1
+\set movie 2
+\set rate 3
+
+WITH thismovie AS(
+  SELECT *
+  FROM user_watch
+  WHERE uconst = :user AND tconst = :movie
+)
+
+UPDATE user_watch
+SET rating = :rate
+WHERE (SELECT COUNT(*) FROM thismovie) > 0
