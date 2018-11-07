@@ -5,7 +5,18 @@ BEGIN
  IF NEW.tconst != NULL
  SELECT *
  FROM title_episode
- WHERE NEW.tconst = parent_tconst
+ WHERE NEW.tconst = tconst
+
+--if there is next episode
+
+ INSERT INTO user_watch(tconst,uconst,date,rating)
+ VALUES((SELECT parent_tconst
+  FROM title_episode
+  WHERE parent_tconst = XXX),
+  uconst,
+  date,
+  NULL);
+  
  END IF;
 
  RETURN NEW;
