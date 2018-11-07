@@ -1,0 +1,13 @@
+CREATE OR REPLACE FUNCTION check_complete()
+  RETURNS trigger AS
+$BODY$
+BEGIN
+ IF NEW.tconst != NULL
+ SELECT *
+ FROM title_episode
+ WHERE NEW.tconst = parent_tconst
+ END IF;
+
+ RETURN NEW;
+END;
+$BODY$
