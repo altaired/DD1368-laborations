@@ -25,3 +25,6 @@ WITH nr_ep_watched_series AS (
     on title_episode.tconst = title_basics.tconst
   ORDER by parent_tconst, season_number, episode_number
 )
+  SELECT original_title, COUNT(*)
+  FROM all_ep_series
+  GROUP BY parent_tconst, original_title
