@@ -2,12 +2,7 @@
 \set movie 2
 \set rate 4
 
-WITH completed AS(
-  SELECT *
-  FROM title_episode
-  WHERE parent_tconst != :rate
-
-), thismovie AS(
+WITH thismovie AS(
   SELECT *
   FROM user_watch
   WHERE uconst = :user AND tconst = :movie
@@ -15,4 +10,5 @@ WITH completed AS(
 
 UPDATE user_watch
 SET rating = :rate
-WHERE (SELECT COUNT(*) FROM thismovie) > 0 AND (SELECT COUNT(*) FROM completed)> 0
+WHERE (SELECT COUNT(*) FROM thismovie) > 0
+  AND (titletype LIKE 'MOVIE' OR titletype LIKE 'TV-SERIES')
