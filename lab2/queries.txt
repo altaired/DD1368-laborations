@@ -7,7 +7,7 @@ WITH user_profile AS (
   WHERE uconst = :user
 ), child_safe AS (
   SELECT t.tconst FROM title_basics t
-  WHERE is_adult != (SELECT is_child FROM user_basics)
+  WHERE is_adult != (SELECT is_child FROM user_profile)
   OR is_adult = false
 ), forbidden_genres AS (
   SELECT genre FROM user_genres
@@ -40,7 +40,7 @@ WITH user_profile AS (
   WHERE uconst = :user
 ), child_safe AS (
   SELECT t.tconst FROM title_basics t
-  WHERE is_adult != (SELECT is_child FROM user_basics)
+  WHERE is_adult != (SELECT is_child FROM user_profile)
   OR is_adult = false
 ), forbidden_genres AS (
   SELECT genre FROM user_genres
@@ -74,7 +74,7 @@ WITH user_profile AS (
   WHERE uconst = :user
 ), child_safe AS (
   SELECT t.tconst FROM title_basics t
-  WHERE is_adult != (SELECT is_child FROM user_basics)
+  WHERE is_adult != (SELECT is_child FROM user_profile)
   OR is_adult = false
 ), forbidden_genres AS (
   SELECT genre FROM user_genres
@@ -107,7 +107,7 @@ WITH user_profile AS (
   WHERE uconst = :user
 ), child_safe AS (
   SELECT t.tconst FROM title_basics t
-  WHERE is_adult != (SELECT is_child FROM user_basics)
+  WHERE is_adult != (SELECT is_child FROM user_profile)
   OR is_adult = false
 ), forbidden_genres AS (
   SELECT genre FROM user_genres
@@ -138,7 +138,7 @@ WITH user_profile AS (
   WHERE uconst = :user
 ), child_safe AS (
   SELECT t.tconst FROM title_basics t
-  WHERE is_adult != (SELECT is_child FROM user_basics)
+  WHERE is_adult != (SELECT is_child FROM user_profile)
   OR is_adult = false
 ), forbidden_genres AS (
   SELECT genre FROM user_genres
@@ -164,6 +164,45 @@ SELECT * FROM title_basics_filtered tbf
 INNER JOIN user_watched uw ON uw.tconst = tbf.tconst
 AND rating IS NOT NULL
 WHERE rating > 3;
+
+# Changed to not show already watched titles
+
+
+\set user 1
+
+WITH user_profile AS (
+  SELECT * FROM user_basics
+  WHERE uconst = :user
+), child_safe AS (
+  SELECT t.tconst FROM title_basics t
+  WHERE is_adult != (SELECT is_child FROM user_profile)
+  OR is_adult = false
+), forbidden_genres AS (
+  SELECT genre FROM user_genres
+  WHERE uconst = :user
+), forbidden_titles AS (
+  SELECT tconst FROM title_genres
+  WHERE genre IN (SELECT genre FROM forbidden_genres)
+), user_age AS (
+  SELECT age FROM user_basics_age
+  WHERE uconst = :user
+), user_watched AS (
+  SELECT tconst FROM user_watch
+  WHERE uconst = :user
+  AND date IS NOT NULL
+), title_basics_filtered AS (
+    SELECT *
+    FROM title_basics
+    WHERE tconst IN (SELECT tconst FROM child_safe)
+      AND tconst NOT IN (SELECT tconst FROM forbidden_titles)
+      AND age_limit <= (SELECT age FROM user_age)
+      AND tconst NOT IN (SELECT tconst FROM user_watched)
+)
+
+SELECT title_crew.job, title_crew.characters, name_basics.primary_name, title_basics_filtered.primary_title FROM title_crew
+INNER JOIN name_basics ON title_crew.nconst = name_basics.nconst
+LEFT JOIN title_basics_filtered ON title_crew.tconst = title_basics_filtered.tconst
+WHERE name_basics.primary_name LIKE '%Jason%';
 
 
 # Remaining episodes
