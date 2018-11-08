@@ -10,3 +10,5 @@ INNER JOIN name_basics ON title_crew.nconst = name_basics.nconst
 LEFT JOIN title_basics ON title_crew.tconst = title_basics.tconst
 WHERE name_basics.primary_name LIKE '%Carter%';
 
+
+select * from title_basics where title_type LIKE '%TV-EPISODE%';
