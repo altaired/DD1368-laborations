@@ -2,21 +2,17 @@ CREATE OR REPLACE FUNCTION check_complete()
   RETURNS trigger AS
 $BODY$
 BEGIN
- IF NEW.tconst != NULL
- SELECT *
- FROM title_episode
- WHERE NEW.tconst = tconst
-
---if there is next episode
+ IF NEW.tconst != NULL THEN
 
  INSERT INTO user_watch(tconst,uconst,date,rating)
  VALUES((SELECT parent_tconst
-  FROM title_episode
-  WHERE parent_tconst = XXX),
-  uconst,
+   FROM title_episode
+   WHERE tconst = NEW.tconst),
+  (SELECT uconst
+    FROM user_watch),
   date,
   NULL);
-  
+
  END IF;
 
  RETURN NEW;
