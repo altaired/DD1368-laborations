@@ -98,6 +98,38 @@ WITH user_profile AS (
 SELECT * FROM title_basics_filtered
 WHERE tconst IN (SELECT tconst FROM titles_with_desired_language);
 
+# Type
+
+\set user 1
+
+WITH user_profile AS (
+  SELECT * FROM user_basics
+  WHERE uconst = :user
+), child_safe AS (
+  SELECT t.tconst FROM title_basics t
+  WHERE is_adult != (SELECT is_child FROM user_basics)
+  OR is_adult = false
+), forbidden_genres AS (
+  SELECT genre FROM user_genres
+  WHERE uconst = :user
+), forbidden_titles AS (
+  SELECT tconst FROM title_genres
+  WHERE genre IN (SELECT genre FROM forbidden_genres)
+), user_age AS (
+  SELECT age FROM user_basics_age
+  WHERE uconst = :user
+), title_basics_filtered AS (
+    SELECT *
+    FROM title_basics
+    WHERE tconst IN (SELECT tconst FROM child_safe)
+      AND tconst NOT IN (SELECT tconst FROM forbidden_titles)
+      AND age_limit <= (SELECT age FROM user_age)
+)
+
+SELECT * FROM title_basics_filtered
+WHERE title_type = 'MOVIE';
+
+
 # Remaining episodes
 
 -- DRAFT. nr_ep_watched_series works now :)
