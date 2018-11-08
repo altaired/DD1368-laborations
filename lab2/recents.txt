@@ -1,0 +1,34 @@
+\set user 1
+
+WITH user_profile AS (
+  SELECT * FROM user_basics
+  WHERE uconst = :user
+), child_safe AS (
+  SELECT t.tconst FROM title_basics t
+  WHERE is_adult != (SELECT is_child FROM user_profile)
+  OR is_adult = false
+), forbidden_genres AS (
+  SELECT genre FROM user_genres
+  WHERE uconst = :user
+), forbidden_titles AS (
+  SELECT tconst FROM title_genres
+  WHERE genre IN (SELECT genre FROM forbidden_genres)
+), user_age AS (
+  SELECT age FROM user_basics_age
+  WHERE uconst = :user
+), title_basics_filtered AS (
+    SELECT *
+    FROM title_basics
+    WHERE tconst IN (SELECT tconst FROM child_safe)
+      AND tconst NOT IN (SELECT tconst FROM forbidden_titles)
+      AND age_limit <= (SELECT age FROM user_age)
+), user_watched AS (
+     SELECT * FROM user_watch
+     WHERE uconst = :user
+)
+
+SELECT * FROM title_basics_filtered tbf
+LEFT JOIN user_watched uw
+ON tbf.tconst = uw.tconst
+WHERE uw.date IS NOT NULL
+ORDER BY tbf.start_year
