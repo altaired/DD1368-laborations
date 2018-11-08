@@ -1,0 +1,21 @@
+INSERT INTO title_basics (title_type, primary_title, original_title, is_adult, start_year, end_year, runtime_minutes, age_limit)
+VALUES ('TV-SERIES', 'Test series', 'Test series', TRUE, '190101', '190201', 100, 10);
+
+INSERT INTO title_basics (title_type, primary_title, original_title, is_adult, start_year, end_year, runtime_minutes, age_limit)
+VALUES ('TV-EPISODE', 'Test series', 'Test series', TRUE, '190101', '190201', 100, 10);
+
+INSERT INTO title_episode
+VALUES (21, 20, 1, 1);
+
+
+
+INSERT INTO title_akas
+VALUES (20, 'Test Movie in other language', 'SWE', 'sv', FALSE);
+
+
+DELETE FROM user_watch WHERE tconst = 20;
+
+
+INSERT INTO user_notifications (uconst, tconst, text)
+SELECT uconst, tconst, 'New episode released' constantvalue  FROM user_subscriptions
+WHERE tconst = 3;
