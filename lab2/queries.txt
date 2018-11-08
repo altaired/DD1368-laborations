@@ -20,7 +20,8 @@ WITH nr_ep_watched_series AS (
     AND title_basics.title_type = 'TV-EPISODE'
   GROUP BY title_episode.parent_tconst, title_basics.original_title
 ), all_ep_series AS (
-  SELECT *
-  FROM title_episode
+  SELECT  title_episode.tconst, title_episode.parent_tconst, title_basics.original_title
+  FROM title_episode join title_basics
+    on title_episode.tconst = title_basics.tconst
   ORDER by parent_tconst, season_number, episode_number
 )
