@@ -18,6 +18,7 @@ Referenced by:
     TABLE "title_crew" CONSTRAINT "title_crew_tconst_fkey" FOREIGN KEY (tconst) REFERENCES title_basics(tconst)
     TABLE "title_episode" CONSTRAINT "title_episode_tconst_fkey" FOREIGN KEY (tconst) REFERENCES title_basics(tconst)
     TABLE "title_genres" CONSTRAINT "title_genres_tconst_fkey" FOREIGN KEY (tconst) REFERENCES title_basics(tconst)
+    TABLE "user_notifications" CONSTRAINT "user_notifications_tconst_fkey" FOREIGN KEY (tconst) REFERENCES title_basics(tconst)
     TABLE "user_subscriptions" CONSTRAINT "user_subscriptions_tconst_fkey" FOREIGN KEY (tconst) REFERENCES title_basics(tconst)
     TABLE "user_watch" CONSTRAINT "user_watch_tconst_fkey" FOREIGN KEY (tconst) REFERENCES title_basics(tconst)
 
@@ -115,6 +116,7 @@ Indexes:
     "user_basics_pkey" PRIMARY KEY, btree (uconst)
 Referenced by:
     TABLE "user_genres" CONSTRAINT "user_genres_uconst_fkey" FOREIGN KEY (uconst) REFERENCES user_basics(uconst)
+    TABLE "user_notifications" CONSTRAINT "user_notifications_uconst_fkey" FOREIGN KEY (uconst) REFERENCES user_basics(uconst)
     TABLE "user_subscriptions" CONSTRAINT "user_subscriptions_uconst_fkey" FOREIGN KEY (uconst) REFERENCES user_basics(uconst)
     TABLE "user_watch" CONSTRAINT "user_watch_uconst_fkey" FOREIGN KEY (uconst) REFERENCES user_basics(uconst)
 
@@ -149,5 +151,14 @@ Foreign-key constraints:
 Foreign-key constraints:
     "user_watch_tconst_fkey" FOREIGN KEY (tconst) REFERENCES title_basics(tconst)
     "user_watch_uconst_fkey" FOREIGN KEY (uconst) REFERENCES user_basics(uconst)
-Triggers:
-    check_complete BEFORE INSERT ON user_watch FOR EACH ROW EXECUTE PROCEDURE check_complete()
+    
+    
+                                      Table "public.user_notifications"
+ Column |          Type          | Collation | Nullable |                      Default
+--------+------------------------+-----------+----------+----------------------------------------------------
+ uconst | integer                |           | not null | nextval('user_notifications_uconst_seq'::regclass)
+ tconst | integer                |           | not null | nextval('user_notifications_tconst_seq'::regclass)
+ text   | character varying(255) |           |          |
+Foreign-key constraints:
+    "user_notifications_tconst_fkey" FOREIGN KEY (tconst) REFERENCES title_basics(tconst)
+    "user_notifications_uconst_fkey" FOREIGN KEY (uconst) REFERENCES user_basics(uconst)
