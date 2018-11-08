@@ -1,6 +1,7 @@
 \set user 1
 \set movie 2
 \set rate 4
+--\set complete true
 
 WITH thismovie AS(
   SELECT *
@@ -11,4 +12,4 @@ WITH thismovie AS(
 UPDATE user_watch
 SET rating = :rate
 WHERE (SELECT COUNT(*) FROM thismovie) > 0
-  AND (titletype LIKE 'MOVIE' OR titletype LIKE 'TV-SERIES')
+  AND (titletype LIKE 'MOVIE' OR titletype LIKE 'TV-EPISODE')
