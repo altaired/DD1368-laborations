@@ -1,7 +1,6 @@
 \set user 1
 \set movie 2
 \set rate 4
---\set complete true
 
 WITH thismovie AS(
   SELECT *
