@@ -1,3 +1,5 @@
+-- use to change rating
+
 \set user 1
 \set movie 2
 \set rate 4
@@ -11,4 +13,5 @@ WITH thismovie AS(
 UPDATE user_watch
 SET rating = :rate
 WHERE (SELECT COUNT(*) FROM thismovie) > 0
-  AND (titletype LIKE 'MOVIE' OR titletype LIKE 'TV-EPISODE')
+  AND (SELECT COUNT(*) FROM title_basics WHERE title_type = 'MOVIE' OR title_type = 'TV-EPISODE')>0 
+  AND tconst = :movie
