@@ -1,0 +1,15 @@
+CREATE OR REPLACE FUNCTION new_episode()
+  RETURNS trigger AS
+$BODY$
+BEGIN
+ IF (SELECT NEW.tconst FROM title_episode WHERE (SELECT parent_tconst FROM title_episode) =  ) THEN 
+ DELETE *
+  FROM user_watch
+  WHERE tconst = (SELECT tconst
+    FROM title_episode
+    WHERE parent_tconst)
+ END IF;
+
+ RETURN NEW;
+END;
+$BODY$
