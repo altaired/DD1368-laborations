@@ -207,21 +207,70 @@ WHERE name_basics.primary_name LIKE '%Jason%';
 
 # Remaining episodes
 
--- DRAFT. nr_ep_watched_series works now :)
-WITH nr_ep_watched_series AS (
-  SELECT title_episode.parent_tconst, title_basics.original_title, COUNT(*)
-  FROM user_watch join title_basics
-    on user_watch.tconst = title_basics.tconst
-    join title_episode on user_watch.tconst = title_episode.tconst
-  WHERE user_watch.uconst = 1
-    AND title_basics.title_type = 'TV-EPISODE'
-  GROUP BY title_episode.parent_tconst, title_basics.original_title
-), all_ep_series AS (
-  SELECT  title_episode.tconst, title_episode.parent_tconst, title_basics.original_title
-  FROM title_episode join title_basics
-    on title_episode.tconst = title_basics.tconst
-  ORDER by parent_tconst, season_number, episode_number
+\set user 1
+
+WITH episodes AS (
+  SELECT tconst FROM title_basics
+  WHERE title_type = 'TV-EPISODE'
+), user_watched AS (
+  SELECT * FROM user_watch
+  WHERE uconst = :user
+  AND tconst IN (SELECT tconst FROM episodes)
+), user_watched_with_parent AS (
+  SELECT te.parent_tconst, uw.uconst FROM user_watched uw
+  LEFT JOIN title_episode te
+  ON te.tconst = uw.tconst
+), count_watched_episodes AS (
+  SELECT parent_tconst, COUNT(*) AS cnt FROM user_watched_with_parent
+  GROUP BY parent_tconst
+), count_all_episodes AS (
+  SELECT parent_tconst, COUNT(*) AS cnt FROM title_episode
+  GROUP BY parent_tconst
+), not_finished_series AS (
+  SELECT cae.parent_tconst AS tconst,
+         cwe.cnt AS watched,
+         cae.cnt AS total
+  FROM count_all_episodes cae
+  LEFT JOIN count_watched_episodes cwe ON cae.parent_tconst = cwe.parent_tconst
+), user_profile AS (
+  SELECT * FROM user_basics
+  WHERE uconst = :user
+), child_safe AS (
+  SELECT t.tconst FROM title_basics t
+  WHERE is_adult != (SELECT is_child FROM user_profile)
+  OR is_adult = false
+), forbidden_genres AS (
+  SELECT genre FROM user_genres
+  WHERE uconst = :user
+), forbidden_titles AS (
+  SELECT tconst FROM title_genres
+  WHERE genre IN (SELECT genre FROM forbidden_genres)
+), user_age AS (
+  SELECT age FROM user_basics_age
+  WHERE uconst = :user
+), user_watched_date AS (
+  SELECT tconst FROM user_watch
+  WHERE uconst = :user
+  AND date IS NOT NULL
+), title_basics_filtered AS (
+    SELECT *
+    FROM title_basics
+    WHERE tconst IN (SELECT tconst FROM child_safe)
+      AND tconst NOT IN (SELECT tconst FROM forbidden_titles)
+      AND age_limit <= (SELECT age FROM user_age)
+      AND tconst NOT IN (SELECT tconst FROM user_watched_date)
+), title_basics_filtered_series AS (
+  SELECT * FROM title_basics_filtered
+  WHERE title_type = 'TV-SERIES'
+), series_to_watch AS (
+  SELECT tconst FROM not_finished_series nfs
+  WHERE nfs.total - nfs.watched > 0
+  UNION ALL (
+    SELECT tconst FROM title_basics_filtered_series
+    WHERE tconst NOT IN (SELECT parent_tconst FROM user_watched_with_parent)
+  )
 )
-  SELECT original_title, COUNT(*)
-  FROM all_ep_series
-  GROUP BY parent_tconst, original_title
+
+SELECT * FROM series_to_watch stw
+LEFT JOIN title_basics tb ON
+stw.tconst = tb.tconst;
