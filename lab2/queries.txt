@@ -10,5 +10,17 @@ INNER JOIN name_basics ON title_crew.nconst = name_basics.nconst
 LEFT JOIN title_basics ON title_crew.tconst = title_basics.tconst
 WHERE name_basics.primary_name LIKE '%Carter%';
 
-
-select * from title_basics where title_type LIKE '%TV-EPISODE%';
+-- DRAFT. nr_ep_watched_series works now :)
+WITH nr_ep_watched_series AS (
+  SELECT title_episode.parent_tconst, title_basics.original_title, COUNT(*)
+  FROM user_watch join title_basics
+    on user_watch.tconst = title_basics.tconst
+    join title_episode on user_watch.tconst = title_episode.tconst
+  WHERE user_watch.uconst = 1
+    AND title_basics.title_type = 'TV-EPISODE'
+  GROUP BY title_episode.parent_tconst, title_basics.original_title
+), all_ep_series AS (
+  SELECT *
+  FROM title_episode
+  ORDER by parent_tconst, season_number, episode_number
+)
