@@ -9,7 +9,8 @@ BEGIN
    FROM title_episode
    WHERE tconst = NEW.tconst),
   (SELECT uconst
-    FROM user_watch),
+    FROM user_watch
+    WHERE tconst = NEW.tconst),
   date,
   NULL);
 
