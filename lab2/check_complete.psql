@@ -2,7 +2,21 @@ CREATE OR REPLACE FUNCTION check_complete()
   RETURNS trigger AS
 $BODY$
 BEGIN
- IF NEW.tconst != NULL THEN
+ IF (SELECT COUNT(*) FROM (SELECT title_episode.tconst,
+   title_episode.parent_tconst,
+   title_episode.season_number,
+   title_episode.episode_number,
+   user_watch.uconst,
+   user_watch.date,
+   user_watch.rating
+   FROM title_episode left join user_watch
+   ON title_episode.tconst = user_watch.tconst
+   WHERE user_watch.uconst = 1
+    AND title_episode.parent_tconst = 3
+   ORDER BY season_number, episode_number) AS watched
+) = (SELECT COUNT(*) FROM title_episode WHERE parent_tconst = 4) AS all
+
+ THEN
 
  INSERT INTO user_watch(tconst,uconst,date,rating)
  VALUES((SELECT parent_tconst
@@ -12,10 +26,20 @@ BEGIN
     FROM user_watch
     WHERE tconst = NEW.tconst),
   date,
-  NULL);
+  0);
 
  END IF;
 
  RETURN NEW;
 END;
 $BODY$
+
+LANGUAGE plpgsql VOLATILE
+COST 100;
+
+
+CREATE TRIGGER check_complete
+  BEFORE INSERT --before/after shouldn't matter
+  ON user_watch
+  FOR EACH ROW
+  EXECUTE PROCEDURE check_complete();
