@@ -1,0 +1,153 @@
+                                          Table "public.title_basics"
+     Column      |          Type          | Collation | Nullable |                   Default
+-----------------+------------------------+-----------+----------+----------------------------------------------
+ tconst          | integer                |           | not null | nextval('title_basics_tconst_seq'::regclass)
+ title_type      | title_type             |           |          |
+ primary_title   | character varying(255) |           | not null |
+ original_title  | character varying(255) |           | not null |
+ is_adult        | boolean                |           | not null |
+ start_year      | date                   |           |          |
+ end_year        | date                   |           |          |
+ runtime_minutes | integer                |           |          |
+ age_limit       | integer                |           |          | 15
+Indexes:
+    "title_basics_pkey" PRIMARY KEY, btree (tconst)
+Referenced by:
+    TABLE "title_akas" CONSTRAINT "title_akas_tconst_fkey" FOREIGN KEY (tconst) REFERENCES title_basics(tconst)
+    TABLE "title_captions" CONSTRAINT "title_captions_tconst_fkey" FOREIGN KEY (tconst) REFERENCES title_basics(tconst)
+    TABLE "title_crew" CONSTRAINT "title_crew_tconst_fkey" FOREIGN KEY (tconst) REFERENCES title_basics(tconst)
+    TABLE "title_episode" CONSTRAINT "title_episode_tconst_fkey" FOREIGN KEY (tconst) REFERENCES title_basics(tconst)
+    TABLE "title_genres" CONSTRAINT "title_genres_tconst_fkey" FOREIGN KEY (tconst) REFERENCES title_basics(tconst)
+    TABLE "user_subscriptions" CONSTRAINT "user_subscriptions_tconst_fkey" FOREIGN KEY (tconst) REFERENCES title_basics(tconst)
+    TABLE "user_watch" CONSTRAINT "user_watch_tconst_fkey" FOREIGN KEY (tconst) REFERENCES title_basics(tconst)
+
+
+
+                                           Table "public.title_akas"
+      Column       |          Type          | Collation | Nullable |                  Default
+-------------------+------------------------+-----------+----------+--------------------------------------------
+ tconst            | integer                |           | not null | nextval('title_akas_tconst_seq'::regclass)
+ title             | character varying(255) |           |          |
+ region            | character varying(3)   |           |          |
+ language          | character varying(3)   |           |          |
+ is_original_title | boolean                |           |          |
+Foreign-key constraints:
+    "title_akas_tconst_fkey" FOREIGN KEY (tconst) REFERENCES title_basics(tconst)
+
+
+
+                                      Table "public.title_captions"
+  Column  |         Type         | Collation | Nullable |                    Default
+----------+----------------------+-----------+----------+------------------------------------------------
+ tconst   | integer              |           | not null | nextval('title_captions_tconst_seq'::regclass)
+ language | character varying(3) |           |          |
+Foreign-key constraints:
+    "title_captions_tconst_fkey" FOREIGN KEY (tconst) REFERENCES title_basics(tconst)
+
+
+
+
+                                        Table "public.title_crew"
+   Column   |          Type          | Collation | Nullable |                  Default
+------------+------------------------+-----------+----------+--------------------------------------------
+ tconst     | integer                |           | not null | nextval('title_crew_tconst_seq'::regclass)
+ nconst     | integer                |           | not null | nextval('title_crew_nconst_seq'::regclass)
+ category   | character varying(64)  |           |          |
+ job        | character varying(64)  |           |          |
+ characters | character varying(255) |           |          |
+Foreign-key constraints:
+    "title_crew_nconst_fkey" FOREIGN KEY (nconst) REFERENCES name_basics(nconst)
+    "title_crew_tconst_fkey" FOREIGN KEY (tconst) REFERENCES title_basics(tconst)
+
+
+
+                                  Table "public.title_episode"
+     Column     |  Type   | Collation | Nullable |                    Default
+----------------+---------+-----------+----------+-----------------------------------------------
+ tconst         | integer |           | not null | nextval('title_episode_tconst_seq'::regclass)
+ parent_tconst  | integer |           |          |
+ season_number  | integer |           |          |
+ episode_number | integer |           |          |
+Foreign-key constraints:
+    "title_episode_tconst_fkey" FOREIGN KEY (tconst) REFERENCES title_basics(tconst)
+Triggers:
+    new_episode AFTER INSERT ON title_episode FOR EACH ROW EXECUTE PROCEDURE new_episode()
+
+
+                                     Table "public.title_genres"
+ Column |         Type          | Collation | Nullable |                   Default
+--------+-----------------------+-----------+----------+----------------------------------------------
+ tconst | integer               |           | not null | nextval('title_genres_tconst_seq'::regclass)
+ genre  | character varying(64) |           |          |
+Foreign-key constraints:
+    "title_genres_tconst_fkey" FOREIGN KEY (tconst) REFERENCES title_basics(tconst)
+
+
+
+                                            Table "public.name_basics"
+       Column       |          Type          | Collation | Nullable |                   Default
+--------------------+------------------------+-----------+----------+---------------------------------------------
+ nconst             | integer                |           | not null | nextval('name_basics_nconst_seq'::regclass)
+ primary_name       | character varying(64)  |           |          |
+ birth              | date                   |           |          |
+ death              | date                   |           |          |
+ primary_profession | character varying(255) |           |          |
+Indexes:
+    "name_basics_pkey" PRIMARY KEY, btree (nconst)
+Referenced by:
+    TABLE "title_crew" CONSTRAINT "title_crew_nconst_fkey" FOREIGN KEY (nconst) REFERENCES name_basics(nconst)
+
+
+                                            Table "public.user_basics"
+     Column      |         Type          | Collation | Nullable |                     Default
+-----------------+-----------------------+-----------+----------+-------------------------------------------------
+ uconst          | integer               |           | not null | nextval('user_basics_uconst_seq'::regclass)
+ managed_by      | integer               |           |          | nextval('user_basics_managed_by_seq'::regclass)
+ first_name      | character varying(64) |           |          |
+ last_name       | character varying(64) |           |          |
+ email           | character varying(64) |           |          |
+ member_since    | date                  |           |          |
+ date_of_birth   | date                  |           |          |
+ payment_status  | character varying(64) |           |          |
+ expiration_date | date                  |           |          |
+ is_child        | boolean               |           |          | false
+Indexes:
+    "user_basics_pkey" PRIMARY KEY, btree (uconst)
+Referenced by:
+    TABLE "user_genres" CONSTRAINT "user_genres_uconst_fkey" FOREIGN KEY (uconst) REFERENCES user_basics(uconst)
+    TABLE "user_subscriptions" CONSTRAINT "user_subscriptions_uconst_fkey" FOREIGN KEY (uconst) REFERENCES user_basics(uconst)
+    TABLE "user_watch" CONSTRAINT "user_watch_uconst_fkey" FOREIGN KEY (uconst) REFERENCES user_basics(uconst)
+
+
+                                     Table "public.user_genres"
+ Column |         Type          | Collation | Nullable |                   Default
+--------+-----------------------+-----------+----------+---------------------------------------------
+ uconst | integer               |           | not null | nextval('user_genres_uconst_seq'::regclass)
+ genre  | character varying(64) |           | not null |
+Foreign-key constraints:
+    "user_genres_uconst_fkey" FOREIGN KEY (uconst) REFERENCES user_basics(uconst)
+
+
+                              Table "public.user_subscriptions"
+ Column |  Type   | Collation | Nullable |                      Default
+--------+---------+-----------+----------+----------------------------------------------------
+ tconst | integer |           | not null | nextval('user_subscriptions_tconst_seq'::regclass)
+ uconst | integer |           | not null | nextval('user_subscriptions_uconst_seq'::regclass)
+Foreign-key constraints:
+    "user_subscriptions_tconst_fkey" FOREIGN KEY (tconst) REFERENCES title_basics(tconst)
+    "user_subscriptions_uconst_fkey" FOREIGN KEY (uconst) REFERENCES user_basics(uconst)
+
+
+
+                              Table "public.user_watch"
+ Column |  Type   | Collation | Nullable |                  Default
+--------+---------+-----------+----------+--------------------------------------------
+ tconst | integer |           | not null | nextval('user_watch_tconst_seq'::regclass)
+ uconst | integer |           | not null | nextval('user_watch_uconst_seq'::regclass)
+ date   | date    |           |          |
+ rating | integer |           |          | 0
+Foreign-key constraints:
+    "user_watch_tconst_fkey" FOREIGN KEY (tconst) REFERENCES title_basics(tconst)
+    "user_watch_uconst_fkey" FOREIGN KEY (uconst) REFERENCES user_basics(uconst)
+Triggers:
+    check_complete BEFORE INSERT ON user_watch FOR EACH ROW EXECUTE PROCEDURE check_complete()
