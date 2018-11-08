@@ -274,3 +274,38 @@ WITH episodes AS (
 SELECT * FROM series_to_watch stw
 LEFT JOIN title_basics tb ON
 stw.tconst = tb.tconst;
+
+# Set user watched
+
+\set user 1
+
+WITH episodes AS (
+  SELECT tconst FROM title_basics
+  WHERE title_type = 'TV-EPISODE'
+), user_watched AS (
+  SELECT * FROM user_watch
+  WHERE uconst = :user
+  AND tconst IN (SELECT tconst FROM episodes)
+), user_watched_with_parent AS (
+  SELECT te.parent_tconst, uw.uconst FROM user_watched uw
+  LEFT JOIN title_episode te
+  ON te.tconst = uw.tconst
+), count_watched_episodes AS (
+  SELECT parent_tconst, COUNT(*) AS cnt, uconst FROM user_watched_with_parent
+  GROUP BY parent_tconst, uconst
+), count_all_episodes AS (
+  SELECT parent_tconst, COUNT(*) AS cnt FROM title_episode
+  GROUP BY parent_tconst
+), series AS (
+  SELECT cae.parent_tconst AS tconst,
+         cwe.cnt AS watched,
+         cae.cnt AS total,
+         cwe.uconst
+  FROM count_all_episodes cae
+  LEFT JOIN count_watched_episodes cwe ON cae.parent_tconst = cwe.parent_tconst
+), finished_series AS (
+  SELECT tconst, uconst FROM series
+  WHERE watched = total
+)
+
+INSERT INTO user_watch (tconst, uconst, date) SELECT tconst, uconst, now() FROM finished_series;
