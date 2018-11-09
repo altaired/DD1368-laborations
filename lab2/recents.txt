@@ -30,5 +30,6 @@ WITH user_profile AS (
 SELECT * FROM title_basics_filtered tbf
 LEFT JOIN user_watched uw
 ON tbf.tconst = uw.tconst
-WHERE uw.date IS NOT NULL
-ORDER BY tbf.start_year
+WHERE uw.date IS NULL
+AND tbf.title_type != 'TV-EPISODE'
+ORDER BY tbf.start_year;
