@@ -146,11 +146,12 @@ Foreign-key constraints:
 --------+---------+-----------+----------+--------------------------------------------
  tconst | integer |           | not null | nextval('user_watch_tconst_seq'::regclass)
  uconst | integer |           | not null | nextval('user_watch_uconst_seq'::regclass)
- date   | date    |           |          |
+ date   | date    |           |          | now()
  rating | integer |           |          | 0
 Foreign-key constraints:
     "user_watch_tconst_fkey" FOREIGN KEY (tconst) REFERENCES title_basics(tconst)
     "user_watch_uconst_fkey" FOREIGN KEY (uconst) REFERENCES user_basics(uconst)
+
     
     
                                       Table "public.user_notifications"
