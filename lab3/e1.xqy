@@ -9,11 +9,12 @@ return
 <continent name="{$continent}">{
     for $country in $countries[encompassed/@continent = $continent]
     for $city in $country/city[@id = $country/@capital]
-    where min($city/population) > 3000000
+    let $latestPopulation := $city/population[@year = max($city/population/@year)]
+    where $latestPopulation > 3000000
     return 
     <country capital="{$city/name}">
         {$country/name}
-        {$city/population}
+        {$latestPopulation}
     </country>
 }</continent>
 }</result>
