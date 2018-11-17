@@ -42,4 +42,5 @@ The parent element can of course be retrived from SQL as well but it looks like 
 
 ## 7
 
+Storage in SQL is in general easier to get an overview of since most of the text is relevent. 
 
