@@ -42,6 +42,8 @@ The parent element can of course be retrived from SQL as well but it looks like 
 
 ### C
 
+Our results are presented in a similar way as Mondials original data, we are just selecting a subset of it. Well formated does not mean easily readable it just means that there are clear hierakies that order our information, but the file itself doesn't look well sorted. 
+
 ## 3 
 
 ### A
