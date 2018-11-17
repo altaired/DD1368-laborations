@@ -51,6 +51,8 @@ Our results are presented in a similar way as Mondials original data, we are jus
 
 ### B
 
+SQL's GROUP BY operator orders the elements of the list in a way that they stay in the group that is specified. For example by the nr of mountains that a country has as is the case in lab 1.3. After taht we can then count the number in each category here. It gives us the ability to see a group as an element in the list.  
+
 ## 4 
 
 ### A
