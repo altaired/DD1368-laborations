@@ -79,6 +79,8 @@ SQL's GROUP BY operator orders the elements of the list in a way that they stay 
 
 ### B
 
+The key difference between tail recursion and non tail recursion, is that in tail recursion the recursive call is the last thing executed by the function. The recursion in XQuery is similar to most other OOP languages (i.e java, python...). In SQL however the recursion is more like joining in a query constructed from a previous query. We keep joining data based on a "recursive SELECT". Depending on the CS textbook different recursive stragegies might be taught, but the most common that i find i tail recursion. Our XQuery solution is tail recursive (i.e we return the next function call), but the SQL solution we made i Lab 1 is non tail recursive. In this exercise we used a breadth first search to get the desired result, this since it was easier to keep track of the steps and total borders crossed.
+
 ## 7
 
 Storage in SQL is in general easier to get an overview of since most of the text is relevent. 
