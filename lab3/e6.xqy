@@ -1,7 +1,7 @@
 xquery version "3.1";
 
 
-declare function local:dfs($queue, $visited, $step, $total, $result) {
+declare function local:bfs($queue, $visited, $step, $total, $result) {
     if(empty($queue)) then $result
     else (
         let $tos := $queue[1]
@@ -10,17 +10,23 @@ declare function local:dfs($queue, $visited, $step, $total, $result) {
             let $country := $tos/../country[@car_code = $neighbour]
             return $country
         )
-        let $res := (<cross num="{$step}" sum="{$total}">{
+        let $newTotal := $total + count($neighbors)
+        let $res := (<cross num="{$step}" sum="{$newTotal}">{
             for $c in $neighbors
             return <country>{data($c/name)}</country>
         }</cross>)
-        return local:dfs(($neighbors, $queue[position() > 1]), ($visited, $neighbors), $step + 1, $total + count($neighbors), ($result, $res))
+        let $steps := (if (count($neighbors) > 0) then (
+            $step + 1
+        ) else (
+            $step
+        ))
+        return local:bfs(($queue[position() > 1], $neighbors), ($visited, $neighbors), $steps, $newTotal, ($result, $res))
     )
 };
 
 declare function local:start() {
     let $countries := doc('mondial.xml')//country[@car_code = 'S']
-    return local:dfs($countries, $countries, 1, count($countries), ())[count(country) > 0]
+    return local:bfs($countries, $countries, 1, 0, ())[count(country) > 0]
 };
 
 <from_swe_cross>{local:start()}</from_swe_cross>
