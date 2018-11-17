@@ -70,7 +70,7 @@ SQL's GROUP BY operator orders the elements of the list in a way that they stay 
 
 ### B
 
-
+If we were to solve this problem in SQL instead of xquery it would be difficult since we can't return elements in the same way.
 
 ## 6
 
