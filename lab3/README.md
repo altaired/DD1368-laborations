@@ -70,7 +70,7 @@ SQL's GROUP BY operator orders the elements of the list in a way that they stay 
 
 ### B
 
-If we were to solve this problem in SQL instead of xquery it would be difficult since we can't return elements in the same way.
+The data is in XML format which we have to convert from before we can use SQL on it. SQL doesn't handle arbetrary hieratical structures like linked lists.
 
 ## 6
 
