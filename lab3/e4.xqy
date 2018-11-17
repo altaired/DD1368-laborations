@@ -4,6 +4,7 @@ xquery version "3.1";
 let $document := doc("mondial.xml")/mondial
 
 let $distance := (
+  
   let $cities := (
     for $city in $document/country/city
     let $latestPopulation := $city/population[@year = max($city/population/@year)]
@@ -11,18 +12,32 @@ let $distance := (
     return <city name="{$city/name}" population="{$latestPopulation}">{$city/longitude}{$city/latitude}</city>
   )
   
-  
+  for $city in $cities
   let $diff := (
-   for $city in $cities
-   let $latdiff2 := ($city/latitude - $city/latitude)*($city/latitude - $city/latitude) 
-   let $longdiff2 := (($city/latitude mod 360) - ($city/latitude mod 360))*(($city/latitude mod 360) - ($city/latitude mod 360))
-   let $dist := math.sqrt($latdiff2+$longdiff2)
-   (: $x := math.sqrt($city/longitude) as xs:double? :)
+   (: Where do I declare the different cities? :)
+   let $latdiff := ($city1/latitude - $city2/latitude)*($city1/latitude - $city2/latitude) 
+   let $longdiff := (($city1/latitude mod 360) - ($city2/latitude mod 360))*(($city1/latitude mod 360) - ($city2/latitude mod 360))
    
-   return 13  
-  )  
-  return 12
+   (: Why is sqrt not recognized here? But only sometimes?! :)
+   return math.sqrt($latdiff+$longdiff)
+  )
+    
+  return $distance
+)
+
+let $rightdist := (
+  for $dist in $distance
+  (: smaller of the two distances between two cities -> choose else other one. should be nested differently? :)
+  (: declare th distances seperately here? :)
+  if($dis1 <= $dis2)
+  then(
+    (: send $dis1 to $rightdist :)
+  )
+  else(
+    (: send $dis2 to $rightdist :)   
+  )
+  return $rightdist 
 )
 
 
-return max($distance)
+return max($rightdist)
