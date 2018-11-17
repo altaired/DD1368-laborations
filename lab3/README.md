@@ -35,6 +35,9 @@ The parent element can of course be retrived from SQL as well but it looks like 
 ## 3 B
 
 ## 4 B
+
+We removed the duplicates from the list of distances making it faster. 
+
 [Good](e4v1.xqy)
 
 [Better](e4v2.xqy)
