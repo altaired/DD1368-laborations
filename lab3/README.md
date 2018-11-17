@@ -81,5 +81,6 @@ SQL's GROUP BY operator orders the elements of the list in a way that they stay 
 
 ## 7
 
-Storage in SQL is in general easier to get an overview of since most of the text is relevent. 
+Storage in SQL is in general easier to get an overview of since most of the text is relevent. SQL is in amany cases the standard despite the fact that there are several differnt dilects of it. In SQL it easy to soin andtho seperate data in different ways, since it is conveniently structured in tables.
 
+Xquery is more similar to other programing languages which makes it easier use if you come from that background and have for example done web programing. In general statements can be written more consisely in xquery than in SQL
