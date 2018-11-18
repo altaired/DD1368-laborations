@@ -44,14 +44,14 @@ declare function local:start() {
     order by $res/@distance
     return $res
   )
-  for $a in $temp [@distance = max($temp/@res)]
+  for $a in $temp [@distance = max($temp/@distance)]
   return $a    
 };
   
 
 
 <result>{
- (: for $a in local:start()[$res/@distance = max(local:start
- return $a  :)
-  local:start()
+  for $i in local:start()[@distance = max(local:start()/@distance)]
+  return $i
+  
 }</result>
