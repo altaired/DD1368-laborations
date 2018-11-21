@@ -18,7 +18,3 @@ WITH landlocked AS(
     count(*) AS all
   FROM city
   WHERE city.population > 3000000;
-  
-   landlocked | all 
-------------+-----
-         18 | 102
