@@ -44,8 +44,4 @@ total AS(
 
 -- Takes out the minimum and maximum and calculates the ratio between them
 SELECT MIN(population) AS dividend, MAX(population) AS divisor, MIN(population)/MAX(population) AS ratio
-FROM total
-
- dividend  |  divisor   |         ratio          
------------+------------+------------------------
-142291579 | 1186720665 | 0.11990317788896007807
+FROM total;
