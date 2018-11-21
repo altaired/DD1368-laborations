@@ -29,11 +29,3 @@ LEFT JOIN combined
 ON grouped.continent = combined.continent 
 AND grouped.GDP = combined.GDP
 ORDER BY combined.GDP DESC;
-
-     continent     | country |  gdp
--------------------+---------+--------
- Europe            | S       | 552000
- Asia              | IR      | 411900
- America           | PR      |  93520
- Africa            | EAK     |  45310
- Australia/Oceania | NCA     |   9280
