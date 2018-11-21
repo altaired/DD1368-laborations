@@ -35,10 +35,3 @@ SELECT *
 FROM top 
 WHERE count_countries = (SELECT MAX(count_countries) 
   FROM top);
-
-
-
- count_countries | count_mountains 
------------------+-----------------
-               5 |               8
-               5 |               5
