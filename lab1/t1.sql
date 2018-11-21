@@ -33,14 +33,4 @@ with_continent AS (
 
 SELECT continent, COUNT(ccc) FROM with_continent
 GROUP BY continent
-ORDER BY count DESC
-
-
-
-     continent     | count
--------------------+-------
- Asia              |     7
- America           |     3
- Africa            |     2
- Europe            |     2
- Australia/Oceania |     1
+ORDER BY count DESC;
