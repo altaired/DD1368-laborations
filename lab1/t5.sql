@@ -21,12 +21,3 @@ SELECT DISTINCT name, mountain, continent, height, distance
 FROM mountains x 
 WHERE distance = (SELECT min(distance) FROM mountains WHERE mountains.continent = x.continent)
 ORDER BY distance;
-
-
-         name          |      mountain      |     continent     | height |      distance
------------------------+--------------------+-------------------+--------+---------------------
- Sao Tome and Principe | Pico de Sao Tome   | Africa            |   2024 |  6.6030296076876711
- Spain                 | Pico de las Nieves | Europe            |   1949 | 30.2780861350251132
- Egypt                 | Shaiyb al-Banat    | Asia              |   2187 | 43.0058193736615138
- Brazil                | Pico da Bandeira   | America           |   2892 | 46.5299215559192620
- Indonesia             | Seulawah Agam      | Australia/Oceania |   1810 | 95.8051407806491353
