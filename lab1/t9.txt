@@ -64,22 +64,3 @@ WITH RECURSIVE donau as (
 SELECT RANK() OVER(ORDER BY n) AS rank, pt AS path, n AS numrivers, len AS totlength FROM all_rivers
 WHERE name NOT IN (SELECT river FROM river WHERE river != '')
 ORDER BY numrivers;
-
-
- rank |                            path                            | numrivers | totlength
-------+------------------------------------------------------------+-----------+-----------
-    1 | Yangtze - Han                                              |         2 |      7912
-    1 | Yangtze - Gan Jiang                                        |         2 |      7138
-    3 | Donau - Save - Drina - Piva                                |         4 |      4256
-    3 | Nile - White Nile - Sobat - Pibor                          |         4 |      5100
-    3 | Nile - White Nile - Sobat - Baro                           |         4 |      5086
-    3 | Rhein - Mosel - Sauer - Alzette                            |         4 |      2114
-    3 | Amazonas - Ucayali - Tambo - Perene                        |         4 |      5703
-    3 | Amazonas - Ucayali - Tambo - Ene                           |         4 |      5718
-    3 | Amazonas - Ucayali - Tambo - Mantaro                       |         4 |      6262
-    3 | Amazonas - Ucayali - Tambo - Apurimac                      |         4 |      6268
-    3 | Amazonas - Rio Madeira - Beni - Rio Madre de Dios          |         4 |      8038
-    3 | Mississippi - Missouri - Platte River - North Platte River |         4 |      9501
-    3 | Donau - Isar - Ammer - Würm                                |         4 |      3343
-    3 | Mississippi - Missouri - Platte River - South Platte River |         4 |      9118
-    3 | Donau - Save - Drina - Tara                                |         4 |      4276
